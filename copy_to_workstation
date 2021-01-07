@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# script to rsync 
+
+# if this script doesn't run on windows, it could be because the newlines are in windows
+# format. Go to the cygwin prompt and type this to fix it
+
+#  sed -i 's/\r$//' copy_to_workstation
+
+DESKTOP='/cygdrive/c/Users/lab/Desktop'
+SOURCEDIR='/cygdrive/c/Users/lab/Desktop/Recordings'
+DESTINATION='luke@10.49.150.110:temp'
+
+cd $SOURCEDIR
+
+for basename in */ ; do
+	basedir=$(echo $basename | sed 's:/*$::')  # trims trailing slash
+	if test -f "$SOURCEDIR/$basedir/session.copied"; then
+		echo $basedir has already been copied. Skipping!
+	else
+		rsync -av --progress $SOURCEDIR/$basedir $DESTINATION | tee -a $basedir/rsync_log.txt
+		if [ $? -eq 0 ]; then  # if rsync executed successfully
+			echo copied successfully: `date` | tee -a $SOURCEDIR/$basedir/session.copied
+			rsync $SOURCEDIR/$basedir/rsync_log.txt $DESTINATION/$basedir  # copy these files over to let the 
+			rsync $SOURCEDIR/$basedir/session.copied $DESTINATION/$basedir # workstation know the rsync is finished
+		else # if rsync encountered an error
+			echo ERROR!!!
+			touch $DESKTOP/ERROR_$basedir.txt
+		fi
+	fi
+done
+
