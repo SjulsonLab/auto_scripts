@@ -1,0 +1,17 @@
+Download cygwin
+Run installer and select “install from internet”
+When asked for a mirror, any will work, but http://mirrors.kernel.org is fast
+Run installer. When it says to select packages, install the defaults, but also type “rsync” in the search window and select these:
+rsync
+librsync2
+Then search for openssh and install “openssh”
+
+
+Now open a cygwin terminal and try to SSH to your linux box:
+ssh luke@10.49.150.110
+(or whatever)
+ After that, make and install an SSH key so you won’t need a password for rsync
+https://www.digitalocean.com/community/tutorials/how-to-set-up-ssh-keys-2
+If you still need a password even after you install the key, try this: 
+https://chemicloud.com/kb/article/ssh-authentication-refused-bad-ownership-or-modes-for-directory/
+
