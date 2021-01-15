@@ -32,7 +32,7 @@ for basename in */ ; do
 	else # found a new session that hasn't already been copied
 
 		# TODO: insert ffmpeg commands to transcode the video here
-		# ????
+		# cmd /C "ffmpeg.exe _______________________  "
 
 		# use rsync to copy to the Linux box
 		# this excludes the original, pre-transcoded video files
