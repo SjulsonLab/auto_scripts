@@ -29,6 +29,7 @@ rsync -av --exclude '*.dat' --exclude '.phy' --safe-links $SOURCEDIR $DREADDBACK
 # chmod u+x daily_backup
 #### add this line to your .bash_profile (or .profile if you don't have a .bash_profile)
 # export PATH="$PATH:$HOME/scripts"      # add your scripts directory to the path
+#### after that, either reopen your terminal or:
 # source ~/.bash_profile     (or ~/.profile)
 
 ############ to launch it manually (for testing)
@@ -39,7 +40,7 @@ rsync -av --exclude '*.dat' --exclude '.phy' --safe-links $SOURCEDIR $DREADDBACK
 # crontab -e       (edit your crontab - don't use sudo)
 ##### add this line (without the #) to run the script daily at 3AM:
 # 0 3 * * *      /home/luke/scripts/daily_backup
-#### control-X to save and exit, and you're done
+##### control-X to save and exit, and you're done
 
 
 
