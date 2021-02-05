@@ -1,0 +1,12 @@
+clone this repo on your desktop
+
+
+2) configure rclone: you will need Luke to log in for this
+open cygwin terminal
+cd to this directory
+./rclone.exe config
+set up dropbox, use defaults for everything
+log in as Luke
+
+
+
