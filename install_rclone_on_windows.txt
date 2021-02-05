@@ -1,7 +1,11 @@
+install git bash
+
 clone this repo on your desktop
 
+copy rclone_to_dropbox.sh to your desktop, edit to configure the appropriate directories.
+if there is more than one user, make separate versions of this script for everyone
 
-2) configure rclone: you will need Luke to log in for this
+configure rclone: you will need Luke to log in for this
 open cygwin terminal
 cd to this directory
 ./rclone.exe config
