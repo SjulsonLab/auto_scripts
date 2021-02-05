@@ -12,7 +12,7 @@
 # sed -i 's/\r$//' ~/Desktop/rclone_to_dropbox.sh
 
 # update these as appropriate
-DESKTOP='/c/Users/lab/Desktop'              # desktop on windows - error messages are placed here
+DESKTOP="/c/Users/lab/Desktop"              # desktop on windows - error messages are placed here
 SOURCEDIR="/c/Users/lab/Desktop/Recordings\ 1"  # the windows directory containing the recordings
 RCLONE=$DESKTOP/auto_scripts/rclone.exe
 TOEXCLUDE='*.jpg'                                    # original video files to exclude from rsync transfer
@@ -55,7 +55,7 @@ for BASENAME in */ ; do
 			$RCLONELINE  # to copy session.copied over
 		else
 			echo "ERROR: rclone for " $BASEDIR " did not complete!!" | tee -a $LOGFILE
-			touch $DESKTOP/ERROR_$BASEDIR.txt
+			eval touch "$DESKTOP/ERROR_$BASEDIR.txt"
 		fi
 	fi
 done
