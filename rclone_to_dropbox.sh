@@ -10,17 +10,30 @@
 # sed -i 's/\r$//' rclone_to_dropbox.sh
 
 # update these as appropriate
-DESKTOP='/cygdrive/c/Users/lab/Desktop'              # desktop on windows - error messages are placed here
-SOURCEDIR='/cygdrive/c/Users/lab/Desktop/Recordings' # the windows directory containing the recordings
+# DESKTOP='/cygdrive/c/Users/lab/Desktop'              # desktop on windows - error messages are placed here
+# SOURCEDIR='/cygdrive/c/Users/lab/Desktop/Recordings' # the windows directory containing the recordings
+# SOURCEDIR='C:/Users/lab/Desktop/Recordings'
+# TOEXCLUDE='*.jpg'                                    # original video files to exclude from rsync transfer
+# DESTINATION='luke_rclone'          					 # the destination directory on dropbox
+
+DESKTOP='/c/Users/lab/Desktop'              # desktop on windows - error messages are placed here
+#SOURCEDIR='/c/Users/lab/Desktop/Recordings' # the windows directory containing the recordings
+SOURCEDIR='C:/Users/lab/Desktop/Recordings'
+RCLONE=$DESKTOP/auto_scripts/rclone.exe
 TOEXCLUDE='*.jpg'                                    # original video files to exclude from rsync transfer
 DESTINATION='luke_rclone'          					 # the destination directory on dropbox
+# RCLONEPARAMS='--dry-run --progress'    # for debugging
+RCLONEPARAMS='--progress'
 
 
 cd $SOURCEDIR
-for basename in */ ; do
-	basedir=$(echo $basename | sed 's:/*$::')  # trims trailing slash
-	if test -f "$SOURCEDIR/$basedir/session.copied"; then
-		echo $basedir has already been copied. Skipping!
+for BASENAME in */ ; do
+	BASEDIR=$(echo $BASENAME | sed 's:/*$::')  # trims trailing slash
+	BASEPATH=$SOURCEDIR/$BASEDIR # for brevity
+	LOGFILE=$BASEPATH/rclone_log.txt
+
+	if test -f "$SOURCEDIR/$BASEDIR/session.copied"; then
+		echo $BASEDIR has already been copied. Skipping!
 	else # found a new session that hasn't already been copied
 
 		# TODO: insert ffmpeg commands to transcode the video here
@@ -28,21 +41,19 @@ for basename in */ ; do
 
 
 		# use rclone to copy to dropbox
-		$DESKTOP/auto_scripts/rclone.exe
-
-		# use rsync to copy to the Linux box
-		# this excludes the original, pre-transcoded video files
-
-#		rsync -av --exclude $TOEXCLUDE --progress $SOURCEDIR/$basedir $DESTINATION | tee -a $basedir/rsync_log.txt
-
-		# if [ $? -eq 0 ]; then  # if rsync executed successfully
-		# 	echo copied successfully: `date` | tee -a $SOURCEDIR/$basedir/session.copied
-		# 	rsync $SOURCEDIR/$basedir/rsync_log.txt $DESTINATION/$basedir  # copy these files over to let the 
-		# 	rsync $SOURCEDIR/$basedir/session.copied $DESTINATION/$basedir # workstation know the rsync is finished
-		# else # if rsync encountered an error
-		# 	echo ERROR!!!
-		# 	touch $DESKTOP/ERROR_$basedir.txt
-		# fi
+		echo "starting rclone at " `date` > $LOGFILE
+		RCLONELINE=`echo $RCLONE copy --exclude $TOEXCLUDE $RCLONEPARAMS $BASEPATH dropbox:$DESTINATION/$BASEDIR | tee -a $LOGFILE`
+# 		echo $RCLONELINE  # for debugging
+		$RCLONELINE
+		EXITCODE=$?  # zero if the rclone worked
+		if [ $EXITCODE -eq 0 ]; then
+			echo "rclone completed successfully at " `date` | tee -a $LOGFILE
+			echo "rclone completed successfully at " `date` > $BASEPATH/session.copied
+			$RCLONELINE  # to copy session.copied over
+		else
+			echo "ERROR: rclone for " $BASEDIR " did not complete!!" | tee -a $LOGFILE
+			touch $DESKTOP/ERROR_$BASEDIR.txt
+		fi
 	fi
 done
 
