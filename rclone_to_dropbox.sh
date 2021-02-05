@@ -1,24 +1,19 @@
 #!/bin/bash
 
-# Script to copy data from windows machine to Linux box. To run this, open cygwin and type
-# copy_to_workstation
+# Script to copy data from windows machine to dropbox. You should save your customized version
+# of this file on the desktop. To run this, open git bash and type
+#
+# cd ~/Desktop
+# ./rclone_to_dropbox.sh
 
 # if this script gives weird errors about "\r"'s, it is because the newlines are in windows
-# format. Go to the cygwin prompt and use sed (stream editor) as below to convert the windows
+# format. Go to the git bash prompt and use sed (stream editor) as below to convert the windows
 # newline characters to unix ones
-
-# sed -i 's/\r$//' rclone_to_dropbox.sh
+# sed -i 's/\r$//' ~/Desktop/rclone_to_dropbox.sh
 
 # update these as appropriate
-# DESKTOP='/cygdrive/c/Users/lab/Desktop'              # desktop on windows - error messages are placed here
-# SOURCEDIR='/cygdrive/c/Users/lab/Desktop/Recordings' # the windows directory containing the recordings
-# SOURCEDIR='C:/Users/lab/Desktop/Recordings'
-# TOEXCLUDE='*.jpg'                                    # original video files to exclude from rsync transfer
-# DESTINATION='luke_rclone'          					 # the destination directory on dropbox
-
 DESKTOP='/c/Users/lab/Desktop'              # desktop on windows - error messages are placed here
-#SOURCEDIR='/c/Users/lab/Desktop/Recordings' # the windows directory containing the recordings
-SOURCEDIR='C:/Users/lab/Desktop/Recordings'
+SOURCEDIR='C:/Users/lab/Desktop/Recordings'  # the windows directory containing the recordings
 RCLONE=$DESKTOP/auto_scripts/rclone.exe
 TOEXCLUDE='*.jpg'                                    # original video files to exclude from rsync transfer
 DESTINATION='luke_rclone'          					 # the destination directory on dropbox
