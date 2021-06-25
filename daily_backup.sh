@@ -5,7 +5,16 @@
 # folder, but it won't copy the folder itself.
 SOURCEDIR="/home/luke"
 DREADDBACKUP="/mnt/dreadd/luke/backup" # where to copy the files to
-rsync -av --exclude '*.dat' --exclude '.phy' --safe-links $SOURCEDIR $DREADDBACKUP
+
+
+# this if statement tests whether 
+if mount | grep -i dreadd > /dev/null ; then 
+	echo "NAS is mounted"
+#	rsync -av --exclude '*.dat' --exclude '.phy' --safe-links $SOURCEDIR $DREADDBACKUP
+else 
+	echo "NAS is not mounted"
+fi
+
 # Note: this will NOT backup symlinks outside of SOURCEDIR's tree, i.e. if you have
 # a link to Dropbox on your laptop, your dropbox folder will not be backed up.
 # If you have a symlink to a second SSD inside your home directory, it will NOT be
