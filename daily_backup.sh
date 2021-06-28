@@ -4,11 +4,14 @@
 # if the SOURCEDIR has a slash at the end, rsync will copy everything inside that
 # folder, but it won't copy the folder itself.
 SOURCEDIR="/home/luke"
-DREADDBACKUP="/mnt/dreadd/luke/backup" # where to copy the files to
+DREADDMOUNT="/mnt/dreadd/bbslab" # where "renata-lukelab" is mounted
+BACKUPDIR="workstation_backups/luke" # where to copy it to
+
+
 
 
 # this if statement tests whether 
-if mount | grep -i dreadd > /dev/null ; then 
+if mount | grep $DREADDMOUNT | grep "renata-lukelab"> /dev/null ; then 
 	echo "NAS is mounted"
 #	rsync -av --exclude '*.dat' --exclude '.phy' --safe-links $SOURCEDIR $DREADDBACKUP
 else 
