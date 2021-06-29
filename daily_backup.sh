@@ -3,19 +3,21 @@
 # this backs up your home directory on you workstation SSD to the NAS
 # if the SOURCEDIR has a slash at the end, rsync will copy everything inside that
 # folder, but it won't copy the folder itself.
-SOURCEDIR="/home/luke"
+SOURCEDIR="/home/luke/"
 DREADDMOUNT="/mnt/dreadd/bbslab" # where "renata-lukelab" is mounted
 BACKUPDIR="workstation_backups/luke" # where to copy it to
 
 
 
 
-# this if statement tests whether 
-if mount | grep $DREADDMOUNT | grep "renata-lukelab"> /dev/null ; then 
-	echo "NAS is mounted"
-#	rsync -av --exclude '*.dat' --exclude '.phy' --safe-links $SOURCEDIR $DREADDBACKUP
+# this if statement tests whether renata-lukelab is actually mounted
+if mount | grep "renata-lukelab" | grep $DREADDMOUNT > /dev/null ; then 
+#	./rsync_tmbackup.sh --rsync-set-flags "--exclude '*.dat' --exclude '.phy' --safe-links --progress" $SOURCEDIR $DREADDMOUNT/$BACKUPDIR
+#	./rsync_tmbackup.sh --rsync-set-flags "--exclude '*.dat' --exclude '.phy' --progress" $SOURCEDIR $DREADDMOUNT/$BACKUPDIR
+
+	rsync -av --exclude '*.dat' --exclude '.phy' --exclude '.cache' --exclude '.config' --exclude '.dropbox*' --safe-links $SOURCEDIR $DREADDMOUNT/$BACKUPDIR
 else 
-	echo "NAS is not mounted"
+	wall "NAS is not mounted! System was not backed up on `date`"
 fi
 
 # Note: this will NOT backup symlinks outside of SOURCEDIR's tree, i.e. if you have
