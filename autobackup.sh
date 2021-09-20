@@ -3,17 +3,7 @@
 # autobackup.sh
 #
 # usage: modify the parameters to customize it for your machine, then test it with TESTRUN=true
-# then eventually TESTRUN false. When you're satisfied that it is working, add it to your crontab
-# using
-#
-# crontab -e
-# (select nano as your editor)
-#
-# then add the line:
-# 15 3 * * * /home/luke/autobackup/autobackup.sh >> /home/luke/autobackup/autobackup.log
-#
-# which will run the script every day at 3:15 AM. We should stagger our backups so that
-# only one user is backing up their data at a time. 
+# then eventually set TESTRUN to false
 #
 # Luke Sjulson 2021-09-17 (with contribution from Maurice Volaski)
 
@@ -52,19 +42,20 @@ EXCLUDE={'*.dat','.phy','.cache','.config','.dropbox*'}
 # $ sudo mkdir /mnt/NAS/lab
 # $ sudo mkdir /mnt/NAS/luke
 # 
-# - figure out your UID and GID
+# 2. figure out your UID and GID
 # $ grep luke /etc/passwd
 # - result:     luke:x:1000:1000:,,,:/home/luke:/bin/bash
 # - your UID (user ID) and GID (group ID) are both 1000
 #
-# next edit your fstab (filesystem tab) to add the dreadd shares
+# 3. edit your fstab (filesystem tab) to add the dreadd shares
 # $ sudo nano /etc/fstab
 # and add these lines
 # //dreadd.montefiore.org/renata-lukelab /mnt/NAS/lab cifs username=luke,password=*****,iocharset=utf8,sec=ntlmssp,vers=2.0,uid=1000,gid=1000 0 0 
 # //dreadd.montefiore.org/luke /mnt/NAS/luke cifs username=luke,password=*****,iocharset=utf8,sec=ntlmssp,vers=2.0,uid=1000,gid=1000 0 0 
 # replace "luke" with your username, ***** with your password, and 1000 with your uid and gid
+# the idea is that you will backup your workstation into your own directory on the NAS, not in the shared renata-lukelab directory
 
-############ to install this script
+# 4. install this script
 # $ cd
 # $ mkdir autobackup
 #### (save this script in there, named autobackup.sh)
@@ -75,10 +66,10 @@ EXCLUDE={'*.dat','.phy','.cache','.config','.dropbox*'}
 #### after that, either reopen your terminal or:
 # $ source ~/.bash_profile     (or ~/.profile)
 
-############ to launch it manually (for testing)
+# 5. launch it manually (for testing)
 # autobackup.sh
 
-############ to make it run automatically
+# 6. make it run automatically
 # $ crontab -e       (edit your crontab - don't use sudo)
 # select-editor    (if you haven't done this already. Select nano)
 ##### add this line (without the #) to run the script daily at 3:15 AM:
