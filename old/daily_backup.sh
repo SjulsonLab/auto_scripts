@@ -50,8 +50,8 @@ fi
 # daily_sync
 
 ############ to make it run automatically
-# select-editor    (if you haven't done this already. Select nano)
 # crontab -e       (edit your crontab - don't use sudo)
+# select-editor    (if you haven't done this already. Select nano)
 ##### add this line (without the #) to run the script daily at 3AM:
 # 0 3 * * *      /home/luke/scripts/daily_backup
 ##### control-X to save and exit, and you're done
