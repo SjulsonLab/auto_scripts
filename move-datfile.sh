@@ -12,18 +12,18 @@
 
 # examples:
 # BACKUPDIR='/home/pi/' # the name of the directory to backup
-# NASDIR='/mnt/NAS/autobackups/luketest_dat/pi/' # where to backup the directory tree
+# NASDIR='/mnt/NAS/lab/dat_files/luke/pi/' # where to backup the directory tree
 # note that the pi directory is present in both BACKUPDIR and NASDIR
 
 # include trailing slashes for both directory names
 BACKUPDIR='/home/pi/' # the name of the directory to backup
-NASDIR='/mnt/NAS/autobackups/luketest_dat/pi/' # where to backup the directory tree
+NASDIR='/mnt/NAS/lab/dat_files/luke/pi/' # where to backup the directory tree
 
 MOUNTSTRING='dreadd'  # if this string does not show up in the list of mounted drives, the script will abort
 FILENAME='DATmove.log' # the name of the logfile
 
 TESTRUN=false        # if true, dat files do not get copied, but directory tree is still made
-MOVEDATFILES=true  # if false, the dat files are copied instead of moved
+MOVEDATFILES=false  # if false, the dat files are copied instead of moved
 
 #######################################################
 # no user-editable parameters below this line
