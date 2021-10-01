@@ -17,7 +17,7 @@ BACKUPDIR='/home/pi'
 NASDIR='/mnt/NAS/luke/autobackup'
 
 MOUNTSTRING='dreadd'  # if this string does not show up in the list of mounted drives, the script will abort
-TESTRUN=false        # if true, nothing actually gets backed up
+TESTRUN=true          # if true, nothing actually gets backed up
 
 # if there's anything else you want to exclude from backups, add it here
 EXCLUDE={'*.dat','.phy','.cache','.config','.dropbox*'} 
