@@ -95,10 +95,10 @@ echo TESTRUN: $TESTRUN
 echo EXCLUDING: $EXCLUDE 
 
 # test if dreadd is mounted - if not, don't do backup
-/usr/bin/df | /usr/bin/grep $MOUNTSTRING
+df | grep $MOUNTSTRING
 if [ ${?} -eq 0 ] ; then
 
-	eval /usr/bin/rsync -v -a --progress --exclude=$EXCLUDE --safe-links \
+	eval rsync -v -a --progress --exclude=$EXCLUDE --safe-links \
 	--itemize-changes --no-perms --no-owner --stats \
 	$BACKUPDIR $NASDIR
 	echo	
