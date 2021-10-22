@@ -112,6 +112,7 @@ else
         echo "#          ERROR - $MOUNTSTRING NOT FOUND!"
 	echo '##########################################################################'
 	wall "Daily backup failed! Ensure $MOUNTSTRING is mounted and run autobackup.sh again"
+	zenity --error --text='Daily backup failed! Ensure the NAS is mounted and run autobackup.sh again'
         echo
 fi
 
