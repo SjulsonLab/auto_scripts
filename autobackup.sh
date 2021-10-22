@@ -16,7 +16,6 @@
 BACKUPDIR='/home/pi'
 NASDIR='/mnt/NAS/luke/autobackup'
 
-MOUNTSTRING='dreadd'  # if this string does not show up in the list of mounted drives, the script will abort
 TESTRUN=true          # finish setting this up, test it, and when you're ready switch this to false
 
 # if there's anything else you want to exclude from backups, add it here
@@ -90,12 +89,11 @@ echo '##########################################################################
 echo
 echo BACKUPDIR: $BACKUPDIR
 echo NASDIR: $NASDIR
-echo MOUNTSTRING: $MOUNTSTRING
 echo TESTRUN: $TESTRUN
 echo EXCLUDING: $EXCLUDE 
 
 # test if dreadd is mounted - if not, don't do backup
-df | grep $MOUNTSTRING
+df | grep $NASDIR
 if [ ${?} -eq 0 ] ; then
 
 	eval rsync -v -a --progress --exclude=$EXCLUDE --safe-links \
