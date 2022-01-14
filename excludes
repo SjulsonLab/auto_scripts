@@ -1,0 +1,5 @@
+- *.dat
+- .phy
+- .cache
+- .config
+- .dropbox*
