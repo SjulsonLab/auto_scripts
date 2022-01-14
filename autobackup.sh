@@ -6,21 +6,22 @@
 # then eventually set TESTRUN to false
 #
 # Luke Sjulson 2021-09-17 (with contribution from Maurice Volaski)
-
+# edited by Maurice Volaski 2021-11-08
 
 # examples:
-# BACKUPDIR='/home/luke' # the name of the directory to backup
-# NASDIR='/mnt/NAS/luke/autobackup' # where to backup the directory tree
+# BACKUPDIR='/home/claire/Documents' # the name of the directory to backup
+# NASDIR='/mnt/NAS/claire/autobackup' # where to backup the directory tree
 
 # DO NOT include trailing slashes for either directory name
-BACKUPDIR='/home/pi'
-NASDIR='/mnt/NAS/luke/autobackup'
+BACKUPDIR='/home/kelly'
+NASDIR='/mnt/NAS/kelly/autobackup'
 
-TESTRUN=true          # finish setting this up, test it, and when you're ready switch this to false
+# set MOUNTSTRING to NAS/your_name
+MOUNTSTRING='NAS/kelly'  # if this string does not show up in the list of mounted drives, the script will abort
+TESTRUN="false"          # finish setting this up, test it, and when you're ready switch this to false
 
 # if there's anything else you want to exclude from backups, add it here
-EXCLUDE={'*.dat','.phy','.cache','.config','.dropbox*'} 
-
+EXCLUDE="/home/kelly/Scripts/auto_scripts/excludes"
 # Note: this will NOT backup symlinks outside of BACKUPDIR's tree, i.e. if you have
 # a link to Dropbox on your laptop, your dropbox folder will not be backed up.
 # If you have a symlink to a second SSD inside your home directory, it will NOT be
@@ -36,10 +37,8 @@ EXCLUDE={'*.dat','.phy','.cache','.config','.dropbox*'}
 
 # 1. Create and mount your backup location on dreadd
 # - create your mount point
-# $ sudo mkdir /mnt
-# $ sudo mkdir /mnt/NAS
-# $ sudo mkdir /mnt/NAS/lab
-# $ sudo mkdir /mnt/NAS/luke
+# $ sudo mkdir -p /mnt/NAS/lab
+# $ sudo mkdir /mnt/NAS/claire
 # 
 # 2. figure out your UID and GID
 # $ grep luke /etc/passwd
@@ -49,9 +48,13 @@ EXCLUDE={'*.dat','.phy','.cache','.config','.dropbox*'}
 # 3. edit your fstab (filesystem tab) to add the dreadd shares
 # $ sudo nano /etc/fstab
 # and add these lines
-# //dreadd.montefiore.org/renata-lukelab /mnt/NAS/lab cifs username=luke,password=*****,iocharset=utf8,sec=ntlmssp,vers=2.0,uid=1000,gid=1000 0 0 
-# //dreadd.montefiore.org/luke /mnt/NAS/luke cifs username=luke,password=*****,iocharset=utf8,sec=ntlmssp,vers=2.0,uid=1000,gid=1000 0 0 
-# replace "luke" with your username, ***** with your password, and 1000 with your uid and gid
+# //dreadd.montefiore.org/luke /mnt/NAS/luke cifs credentials=/home/luke/.nascredentials,iocharset=utf8,sec=ntlmssp,vers=3.0,mfsymlinks,uid=1000,gid=1000 0 0 
+# replace "luke" with your username and 1000 with your uid and gid
+# prepare a file named .nascredentials in your home folder configured like so
+# username: luke
+# password: *****
+# leave out the # and put in your password instead of the ****'s.
+# chmod this file with go-rw.
 # the idea is that you will backup your workstation into your own directory on the NAS, not in the shared renata-lukelab directory
 
 # 4. install this script
@@ -89,15 +92,23 @@ echo '##########################################################################
 echo
 echo BACKUPDIR: $BACKUPDIR
 echo NASDIR: $NASDIR
+echo MOUNTSTRING: $MOUNTSTRING
 echo TESTRUN: $TESTRUN
 echo EXCLUDING: $EXCLUDE 
 
 # test if dreadd is mounted - if not, don't do backup
-df | grep $NASDIR
+/bin/df | /bin/grep $MOUNTSTRING
 if [ ${?} -eq 0 ] ; then
 
-	eval rsync -v -a --progress --exclude=$EXCLUDE --safe-links \
+	DRYRUN=""
+	if [[ ${TESTRUN} == "true" ]] ; then
+        	DRYRUN="--dry-run"
+		echo "we are in dry run mode"
+	fi
+
+	/usr/bin/rsync -v -a --progress --exclude-from=$EXCLUDE --safe-links \
 	--itemize-changes --no-perms --no-owner --stats \
+	${DRYRUN} \
 	$BACKUPDIR $NASDIR
 	echo	
 	echo '##########################################################################'
@@ -109,8 +120,7 @@ else
 	echo '##########################################################################'
         echo "#          ERROR - $MOUNTSTRING NOT FOUND!"
 	echo '##########################################################################'
-	wall "Daily backup failed! Ensure $MOUNTSTRING is mounted and run autobackup.sh again"
-	zenity --error --text='Daily backup failed! Ensure the NAS is mounted and run autobackup.sh again'
+	echo  "Daily backup failed! Ensure $MOUNTSTRING is mounted and run autobackup.sh again"
         echo
 fi
 
